@@ -13,7 +13,11 @@ const jobSchema = new Schema(
         type: String,
         required: [true, 'Please describe the job duties'],
     },
-    skills_req: [{ type: String}],
+    skills_req: { 
+        any: [],
+        default: undefined,
+        required: [true, 'Please enter necessary skills'],
+    },
     pay: {
         type: Number,
         required: [true, 'Please share the pay rate'],
@@ -22,41 +26,35 @@ const jobSchema = new Schema(
         type: String,
         required: [true, 'Please share the location'],
     },
-    employer: {
-        company_name: {
-            type: String,
-            required: [true, 'Please enter the company name'],
-        },
-        employer_id: {
-            type: Schema.Types.ObjectId, 
-            ref: 'employer'
-        },
-        contact: {
+    employer_id: {
+        type: Schema.Types.ObjectId, 
+        ref: 'employer'
+    },
+        //employer ID should be pinged to pop contact information
+        // contact: {
             //who to contact about the role
-            name: {
-                type: String,
-                required: [true, 'Please share who to contact about the position'],
-            },
-            email: {
-                type: String,
-                validate: {
-                    validator: v => {
-                        return /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(v)
-                    },
+        //     name: {
+        //         type: String,
+        //         required: [true, 'Please share who to contact about the position'],
+        //     },
+        //     email: {
+        //         type: String,
+        //         validate: {
+        //             validator: v => {
+        //                 return /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(v)
+        //             },
         
-                },
-                required: [true, 'Please share their email'],
-            },
-            website: {
-                type: String
-            },
-            phone: {
-                type: String,
-                required: [true, 'Please share their phone number'],
-            }
-        }
-
-    }
+        //         },
+        //         required: [true, 'Please share their email'],
+        //     },
+        //     website: {
+        //         type: String
+        //     },
+        //     phone: {
+        //         type: String,
+        //         required: [true, 'Please share their phone number'],
+        //     }
+        // }
   },
   {
     toJSON: {

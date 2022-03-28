@@ -9,8 +9,13 @@ const employerSchema = new Schema(
         trim: true
     },
     contact_info:{
+      name: {
+        type: String,
+        required: [true, 'Please share who to contact about the position'],
+        },
         phone: {
-            type: String
+            type: Number,
+            required: [true, 'Phone number is required'],
         },
         email: {
             type: String,
@@ -19,14 +24,18 @@ const employerSchema = new Schema(
                     return /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(v)
                 },
             },
-            required: [true, 'Email is required!'],
+            required: [true, 'Email is required'],
             unique: true,
         },
         website: {
             type: String
         }
     },
-    jobs: [{ type: Schema.Types.ObjectId, ref: 'job' }]
+    jobs: { 
+      type: [Schema.Types.ObjectId], 
+      ref: 'job',
+      default: undefined
+  }
   },
   {
     toJSON: {
