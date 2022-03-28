@@ -10,8 +10,8 @@ router.use('/employer', employerRoutes);
 
 // router.use('/api', apiRoutes);
 
-// router.use((req, res) => {
-//   return res.send('Wrong route!');
-// });
+router.use((req, res) => {
+  return res.send('Wrong route!');
+});
 
 module.exports = router;

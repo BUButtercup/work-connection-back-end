@@ -19,11 +19,12 @@ const jobLetterSchema = new Schema({
         type:Boolean
     },
     bio: {
-        type: String,
-        required: [true, 'Write about yourself'],
-        maxlength: 280,
+        type: String
     },
-    skills: [{ type: String}],
+    skills: { 
+        any: [],
+        required:  [true, 'Please enter skills']
+    },
     start_date: {
         type: String
     },
@@ -73,7 +74,10 @@ const userSchema = new Schema(
         type: Boolean,
         default: false
     },
-    job_list: [{ type: Schema.Types.ObjectId, ref: 'job' }],
+    job_list: { type: [Schema.Types.ObjectId], 
+        ref: 'job',
+        default: undefined 
+    },
     job_letter: [jobLetterSchema]
   },
   {

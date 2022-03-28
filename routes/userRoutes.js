@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { verifyToken } = require('../../middlewares/authJWT/');
+const { verifyToken } = require('../middleware/authJWT.js');
 const { User, Job } = require('../models/');
+const ObjectId = (require('mongoose').Types.ObjectId);
 
 //check token data
 router.get("/gettokendata", verifyToken, (req, res) => {
@@ -18,19 +19,64 @@ router.get("/gettokendata", verifyToken, (req, res) => {
 //get user's profile
 router.get('/:id', async (req, res) => {
     try {
-        if (req.userId === parseInt(req.params.id)) {
+        // if (req.userId === parseInt(req.params.id)) {
             const userData = await User.findOne({ _id: req.params.id });
             if (!userData) {
                 res.status(404).json({ message: 'No users found!' })
             } else {
                 res.status(200).json(userData);
             }
-        }
+        // } else res.status(401).json({ message: 'you must signin to see that' })
     } catch (err) {
         res.status(500).json({ message: `There was an error: ${err}` });
     }
 
 })
+
+//get user's job letter
+router.get('/:id/letter', async (req, res) => {
+    try {
+        // if (req.userId === parseInt(req.params.id)) {
+            const userData = await User.findOne({ _id: req.params.id });
+            if (!userData) {
+                res.status(404).json({ message: 'No users found!' })
+            } else {
+                res.status(200).json(userData.job_letter);
+            }
+        // } else res.status(401).json({ message: 'you must signin to see that' })
+    } catch (err) {
+        res.status(500).json({ message: `There was an error: ${err}` });
+    }
+
+})
+
+//get user's jobs
+// router.get('/:id/jobs', async (req, res) => {
+//     try {
+        // if (req.userId === parseInt(req.params.id)) {
+            // const userData = await User.findOne({ _id: req.params.id });
+            // if (!userData) {
+            //     res.status(404).json({ message: 'No users found!' })
+            // } else {
+                // const jobList = userData.job_list;
+                // console.log('job list', jobList)
+                // const jobs = []; 
+                // userData.job_list.forEach(id=>{
+                //     console.log('id', id)
+                //     const job = Job.findById(id);
+                //     console.log(job)
+                //     jobs.push(job)
+
+                // })
+                // console.log('jobs', jobs)
+            //     res.status(200).json({job_list: userData.job_list, jobs: jobs});
+            // }
+        // } else res.status(401).json({ message: 'you must signin to see that' })
+//     } catch (err) {
+//         res.status(500).json({ message: `There was an error: ${err}` });
+//     }
+
+// })
 
 //register new user
 router.post('/new', async (req, res) => {
@@ -42,6 +88,7 @@ router.post('/new', async (req, res) => {
     // location
     // phone
     try {
+        console.log('you\'re in the route')
         if ((!req.body.username && req.body.email && req.body.password && req.body.name && req.body.phone) || (req.body.username === '') || (req.body.email === '') || (req.body.password === '') || (req.body.name === '') || (req.body.phone === '')) {
             res.status(400).json({ message: 'Please enter all required information' })
         } else {
@@ -63,7 +110,7 @@ router.post('/new', async (req, res) => {
 })
 
 //sign in
-router.post('', (req, res) => {
+router.post('/signin', (req, res) => {
     User.findOne ({
         username: req.body.username
     })
@@ -85,7 +132,7 @@ router.post('', (req, res) => {
             message: "password incorrect"
           });
         }
-        var token = jwt.sign({ id: user.id }, config.secret, {
+        var token = jwt.sign({ id: user.id }, "i love turtles", {
           expiresIn: 86400 // 24 hours
         });
         res.status(200).send({
